@@ -1,0 +1,110 @@
+---
+title: "Problem Set 2 Scratch"
+output: html_notebook
+---
+
+For this problem set, I will be fixing and analyzing a set of Halloween themed data.
+```{r}
+# clear the environment of R
+rm(list = ls())
+
+# import the libraries that we will need
+library(ggplot2)
+library(dplyr)
+library(here)
+```
+
+To open the data, I will use the `stringsAsFactors = TRUE` function to convert categorical data into factor data.  This allows R to interpret this as factors with different levels that correspond to the different categories within the factor. 
+
+```{r}
+# import the csv file that we are going to use for this exercise with stringsAsFactors = TRUE
+Halloween <- read.csv(here("Data", "Halloween_data_PS2.csv"), stringsAsFactors = TRUE)
+
+# open the dataset
+View(Halloween)
+```
+
+The next task is to examine the data set with at least 2 functions.  I will use the `str()` functions and the `summary()` functions to take a look into some basic statistics regarding the data set.
+
+```{r}
+# get basic stats from the data set
+summary(Halloween)
+
+# get more info surrounding the structure of the data set
+str(Halloween)
+```
+As of right now, there are a few errors with how the data was inputted in the categorical columns.  For example, right now R believes the costume column has 15 levels but if we look at it using the `View()` function, we can see that there really are 9 categories.  The reason R believes there are 15 is because there are 15 different ways that the data are formatted.  R is case sensitive so the way that the data were formatted does matter. 
+
+To fix the "costume" category, I will reassign the data that refer to the same category to the same name to make the formatting consistent. 
+```{r}
+# reassign the data that refers to the wonder woman costume as "Wonder woman"
+WW <- which(Halloween$Costume == "Wonder Woman" | Halloween$Costume == "Wonder woman" | Halloween$Costume == "wonder woman")
+
+Halloween$Costume[WW] <- "Wonder woman"
+
+# reassign the data that refers to the clown costumes as "creepy clown"  
+clown <- which(Halloween$Costume == "Creepy Clown" | Halloween$Costume == "clown" | Halloween$Costume == "creepy clown" | Halloween$Costume == "Creepy clown")
+
+Halloween$Costume[clown] <- "Creepy clown"
+
+# reassign the data that refers to the witch costumes as "Witch"
+w <- which(Halloween$Costume == "witch" | Halloween$Costume == "Witch" | Halloween$Costume =="witch  " )
+
+Halloween$Costume[w] <- "Witch"
+```
+
+Now that the observations inside of the "Costume" column have been made uniform, I will move on to fixing the data in the "Type" column.
+
+```{r}
+# reassign the data that refers to the scary type as "Scary"
+scary <- which(Halloween$Type == "Scary" | Halloween$Type == "scary" |Halloween$Type == "scary ")
+
+Halloween$Type[scary] <- "Scary"
+```
+
+Now we want to calculate the mean age of trick-or-treaters and the mean number of pieces of candy they take.  This should be broken down by costume and type (scary vs not scary)
+
+```{r}
+# calculating the mean age of trick or treaters based on Costume and Type
+mean.a <- Halloween %>% 
+     group_by(Costume, Type)%>%
+     summarise(mean.age = mean(age, na.rm = T),
+     mean.candy = mean(candy_pieces, na.rm = T))
+
+# graph the mean age based on costume type in a histogram
+ggplot(mean.a, aes(x = mean.age, y = mean.candy, colour = Type))+   geom_point(size = 3) +
+  xlab("Mean age of kid (years)") +
+  ylab("Mean number pieces taken") +
+  theme_bw()
+  
+```
+Adding the `colour = Type` argument into the `aes()` function causes the color to be added to the graph according to the "Type" category. The `xlab()` and `ylab()` functions allow us to label the axes with the intended names. The `geom_point()` function allows us to specify the size of the points on the scatter plot.
+
+The next task is to isolate the data for the kids in costumes that are considered "Not scary", 10 years old or under, and create a histogram with this data.
+
+```{r}
+# isolate the data for the kids that are 10 years old or younger and in costumes that are "Not scary"
+young <- Halloween %>% filter(Type == "Not scary" & age <= 10)
+
+# plot a histogram of the data to compare the variance of the data between the two locations
+ggplot(young, aes(x = age)) +
+geom_histogram(binwidth = 2) +
+xlab("Age of child") +
+ylab("Number")
+```
+Now I am going to try and create a box plot outlining the age distribution of children wearing different costumes.  The goal is to make it so the boxplots are seperated by the costumes that are scary vs not scary as well.
+
+Here we go...
+```{r}
+# making a box and whisker plot with ggplot.  Here we are trying to model the relationship between the costume, age, and type of costume
+ggplot(Halloween, aes(x = Costume, y = age)) +
+geom_boxplot()+
+  coord_flip()+
+  geom_point(size = 3, colour = 'lightgrey', alpha = 0.5)+
+  facet_wrap(~Type)+
+  ylab("Child age (years)") +
+  xlab("Costume choice")
+#theme_bw()
+```
+
+
