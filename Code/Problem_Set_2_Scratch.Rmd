@@ -1,0 +1,26 @@
+---
+title: "Problem Set 2 Scratch"
+output: html_notebook
+---
+
+For this problem set, I will be fixing and analyazing a set of Halloween themed data.  The first thing that we will do is clear R's environment and import the correct libraries
+```{r}
+# clear the environment of R
+rm(list = ls())
+
+# import the libraries that we will need
+library(ggplot2)
+library(dplyr)
+library(here)
+```
+
+Great, off to a good start so far.  Let's move on to import the data that we will need.  When I open this, I will use the `stringsAsFactors = TRUE` function to convert categorical data into factor data.  This allows R to interpret this as factors with different levels that correspond to the different categories within the factor. 
+
+```{r}
+# import the csv file that we are going to use for this exercise without stringsAsFactors = TRUE
+Halloween <- read.csv(here("Data", "Halloween_data_PS2.csv"), stringsAsFactors = TRUE)
+
+# now we are going to run a summary of glimpse to take a look at the data
+glimpse(Halloween)
+```
+
