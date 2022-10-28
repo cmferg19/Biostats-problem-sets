@@ -22,13 +22,10 @@ Halloween <- read.csv(here("Data", "Halloween_data_PS2.csv"), stringsAsFactors =
 
 # open the dataset
 View(Halloween)
-
-# now we are going to run a summary of glimpse to take a look at the data
-glimpse(Halloween)
 ```
 Ok, still cranking so far - let's keep going...
 
-The next task is to examine the dataset with at least 2 functions.  I used the `glimpse()` function either to get a brief summary of the data.  Now we are going to use the `str()` functions and the `summary()` functions to take a look into some basic statistics regarding the dataset.
+The next task is to examine the dataset with at least 2 functions.  We are going to use the `str()` functions and the `summary()` functions to take a look into some basic statistics regarding the dataset.
 
 ```{r}
 # get basic stats from the dataset
@@ -37,23 +34,53 @@ summary(Halloween)
 # get more info surrounding the structure of the dataset
 str(Halloween)
 ```
-Now on to fixing errors in the data set.  As of right now, there are a few errors with how the data was inputted in the categorical columns.  For example, right now R believes the costume column has 15 levels but if we look at it using the `View()` function, we can see that there really are 10 categories.  The reason R believes there are 15 is because there are 15 different ways that the data are formatted.  R is case sensitive so the way that the data were formatted does matter. 
+Now on to fixing errors in the data set.  As of right now, there are a few errors with how the data was inputted in the categorical columns.  For example, right now R believes the costume column has 15 levels but if we look at it using the `View()` function, we can see that there really are 9 categories.  The reason R believes there are 15 is because there are 15 different ways that the data are formatted.  R is case sensitive so the way that the data were formatted does matter. 
 
 To fix the "costume" category, I will reassign the data that refer to the same category to the same name to make the formatting consistent. 
 ```{r}
 # reassign the data that refers to the wonder woman costume as "Wonder Woman"
 WW <- which(Halloween$Costume == "Wonder Woman" | Halloween$Costume == "Wonder woman" | Halloween$Costume == "wonder woman")
 
-Halloween$Costume[WW] <- "Wonder Woman"
+Halloween$Costume[WW] <- "Wonder woman"
 
-# reassign the data that refers to the clown costumes as "clown". I am choosing to include the "creepy clown" entries in this as well.  While this does generalize the data a little more, I believe that simplifying the data will make it more digestible. 
+# reassign the data that refers to the clown costumes as "clown". I am choosing to include the "creepy clown" entries in this as well.  
 clown <- which(Halloween$Costume == "Creepy Clown" | Halloween$Costume == "clown" | Halloween$Costume == "creepy clown" | Halloween$Costume == "Creepy clown")
 
-Halloween$Costume[clown] <- "clown"
+Halloween$Costume[clown] <- "Creepy clown"
 
 # reassign the data that refers to the witch costumes as "witch"
-witch <- which(Halloween$Costume == "witch" | Halloween$Costume == "Witch" )
+w <- which(Halloween$Costume == "witch" | Halloween$Costume == "Witch" | Halloween$Costume =="witch  " )
 
-Halloween$Costume[witch] <- "witch"
+Halloween$Costume[w] <- "Witch"
 ```
 
+Now that the observations inside of the "Costume" column have been made uniform, I will move on to fixing the data in the "Type" column. Here, some entries are capitalized and others aren't but for the data analysis to work, all of these need to be in the same format.  To do this, we will follow the same process as above. 
+
+```{r}
+# reassign the data that refers to the scary type as "Scary"
+scary <- which(Halloween$Type == "Scary" | Halloween$Type == "scary" |Halloween$Type == "scary ")
+
+Halloween$Type[scary] <- "Scary"
+```
+
+Ok, now the data is standardized so we can move on to the next step.  Now we want to calculate the mean age of trick-or-treaters and the mean number of pieces of candy they take.  This should be broken down by costume and type (scary vs not scary)
+
+```{r}
+# calculating the mean age of trick or treaters based on Costume and Type
+mean.a <- Halloween %>% 
+     group_by(Costume, Type)%>%
+     summarise(mean.age = mean(age, na.rm = T),
+     mean.candy = mean(candy_pieces, na.rm = T))
+#View(mean.a)
+
+
+# graph the mean age based on costume type in a histogram
+ggplot(mean.a, aes(x = mean.age, y = mean.candy, colour = Type))+   geom_point(size = 2) +
+  xlab("Mean age of kid (years)") +
+  ylab("Mean number pieces taken") +
+  theme_bw()
+  
+```
+Ok, when I first did this and looked at the DF for mean.a, the "witch" costume showed up as 2 separate categories.  It wasn't until after I dug a little deeper that I realized that one of the "witch" observations had a space after it and so did one of the "scary" observations.  That was an easy fix though, I just added a section to my formatting code above that groups the observation with the extra space into the reassignment code.  Now my graph is looking better. 
+
+Adding the `colour = Type` argument into the `aes()` function causes the color to be added to the graph according to the "Type" category. The `xlab()` and `ylab()` functions allow us to label the axes with the intended names. The `geom_point()` function allows us to specify the size of the points on the scatter plot.  I used all of these functions to replicate the histogram on the assignment page as closely as possible. 
