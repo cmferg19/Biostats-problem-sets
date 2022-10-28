@@ -20,7 +20,40 @@ Great, off to a good start so far.  Let's move on to import the data that we wil
 # import the csv file that we are going to use for this exercise without stringsAsFactors = TRUE
 Halloween <- read.csv(here("Data", "Halloween_data_PS2.csv"), stringsAsFactors = TRUE)
 
+# open the dataset
+View(Halloween)
+
 # now we are going to run a summary of glimpse to take a look at the data
 glimpse(Halloween)
+```
+Ok, still cranking so far - let's keep going...
+
+The next task is to examine the dataset with at least 2 functions.  I used the `glimpse()` function either to get a brief summary of the data.  Now we are going to use the `str()` functions and the `summary()` functions to take a look into some basic statistics regarding the dataset.
+
+```{r}
+# get basic stats from the dataset
+summary(Halloween)
+
+# get more info surrounding the structure of the dataset
+str(Halloween)
+```
+Now on to fixing errors in the data set.  As of right now, there are a few errors with how the data was inputted in the categorical columns.  For example, right now R believes the costume column has 15 levels but if we look at it using the `View()` function, we can see that there really are 10 categories.  The reason R believes there are 15 is because there are 15 different ways that the data are formatted.  R is case sensitive so the way that the data were formatted does matter. 
+
+To fix the "costume" category, I will reassign the data that refer to the same category to the same name to make the formatting consistent. 
+```{r}
+# reassign the data that refers to the wonder woman costume as "Wonder Woman"
+WW <- which(Halloween$Costume == "Wonder Woman" | Halloween$Costume == "Wonder woman" | Halloween$Costume == "wonder woman")
+
+Halloween$Costume[WW] <- "Wonder Woman"
+
+# reassign the data that refers to the clown costumes as "clown". I am choosing to include the "creepy clown" entries in this as well.  While this does generalize the data a little more, I believe that simplifying the data will make it more digestible. 
+clown <- which(Halloween$Costume == "Creepy Clown" | Halloween$Costume == "clown" | Halloween$Costume == "creepy clown" | Halloween$Costume == "Creepy clown")
+
+Halloween$Costume[clown] <- "clown"
+
+# reassign the data that refers to the witch costumes as "witch"
+witch <- which(Halloween$Costume == "witch" | Halloween$Costume == "Witch" )
+
+Halloween$Costume[witch] <- "witch"
 ```
 
