@@ -97,5 +97,19 @@ geom_histogram(binwidth = 2) +
 xlab("Age of child") +
 ylab("Number")
 ```
+Now I am going to try and create a box plot outlining the age distribution of children wearing different costumes.  The goal is to make it so the boxplots are seperated by the costumes that are scary vs not scary as well.
+
+Here we go...
+```{r}
+# making a box and whisker plot with ggplot.  Here, instead of specifiying point, you specify the geom_boxplot to add the boxplot as another layer
+ggplot(Halloween, aes(x = Costume, y = age)) +
+geom_boxplot()+
+  coord_flip()+
+  geom_point(size = 3, colour = 'lightgrey', alpha = 0.5)+
+  facet_wrap(~Type)
+  xlab("Child age (years)") +
+  ylab("Costume choice")
+#theme_bw()
+```
 
 
