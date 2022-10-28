@@ -84,3 +84,18 @@ ggplot(mean.a, aes(x = mean.age, y = mean.candy, colour = Type))+   geom_point(s
 Ok, when I first did this and looked at the DF for mean.a, the "witch" costume showed up as 2 separate categories.  It wasn't until after I dug a little deeper that I realized that one of the "witch" observations had a space after it and so did one of the "scary" observations.  That was an easy fix though, I just added a section to my formatting code above that groups the observation with the extra space into the reassignment code.  Now my graph is looking better. 
 
 Adding the `colour = Type` argument into the `aes()` function causes the color to be added to the graph according to the "Type" category. The `xlab()` and `ylab()` functions allow us to label the axes with the intended names. The `geom_point()` function allows us to specify the size of the points on the scatter plot.  I used all of these functions to replicate the histogram on the assignment page as closely as possible. 
+
+The next task is to isolate the data for the kids in costumes that are considered "Not scary", 10 years old or under, and create a histogram with this data.
+
+```{r}
+# isolate the data for the kids that are 10 years old or younger and in costumes that are "Not scary"
+young <- Halloween %>% filter(Type == "Not scary" & age <= 10)
+
+# plot a histogram of the data to compare the variance of the data between the two locations
+ggplot(young, aes(x = age)) +
+geom_histogram(binwidth = 2) +
+xlab("Age of child") +
+ylab("Number")
+```
+
+
