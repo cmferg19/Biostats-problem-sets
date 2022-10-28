@@ -3,7 +3,7 @@ title: "Problem Set 2 Scratch"
 output: html_notebook
 ---
 
-For this problem set, I will be fixing and analyazing a set of Halloween themed data.  The first thing that we will do is clear R's environment and import the correct libraries
+For this problem set, I will be fixing and analyzing a set of Halloween themed data.  The first thing that we will do is clear R's environment and import the correct libraries
 ```{r}
 # clear the environment of R
 rm(list = ls())
@@ -71,11 +71,12 @@ mean.a <- Halloween %>%
      group_by(Costume, Type)%>%
      summarise(mean.age = mean(age, na.rm = T),
      mean.candy = mean(candy_pieces, na.rm = T))
+
 #View(mean.a)
 
 
 # graph the mean age based on costume type in a histogram
-ggplot(mean.a, aes(x = mean.age, y = mean.candy, colour = Type))+   geom_point(size = 2) +
+ggplot(mean.a, aes(x = mean.age, y = mean.candy, colour = Type))+   geom_point(size = 3) +
   xlab("Mean age of kid (years)") +
   ylab("Mean number pieces taken") +
   theme_bw()
@@ -101,14 +102,14 @@ Now I am going to try and create a box plot outlining the age distribution of ch
 
 Here we go...
 ```{r}
-# making a box and whisker plot with ggplot.  Here, instead of specifiying point, you specify the geom_boxplot to add the boxplot as another layer
+# making a box and whisker plot with ggplot.  Here we are trying to model the relationship between the costume, age, and type of costume
 ggplot(Halloween, aes(x = Costume, y = age)) +
 geom_boxplot()+
   coord_flip()+
   geom_point(size = 3, colour = 'lightgrey', alpha = 0.5)+
-  facet_wrap(~Type)
-  xlab("Child age (years)") +
-  ylab("Costume choice")
+  facet_wrap(~Type)+
+  ylab("Child age (years)") +
+  xlab("Costume choice")
 #theme_bw()
 ```
 
