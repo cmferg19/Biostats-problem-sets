@@ -24,7 +24,7 @@ Halloween <- read.csv(here("Data", "Halloween_data_PS2.csv"), stringsAsFactors =
 View(Halloween)
 ```
 
-The next task is to examine the data set with at least 2 functions.  I will use the `str()` functions and the `summary()` functions to take a look into some basic statistics regarding the data set.
+The next task is to examine the data set with the `str()` functions and the `summary()` functions to take a look into some basic statistics and the structure.
 
 ```{r}
 # get basic stats from the data set
@@ -62,7 +62,7 @@ scary <- which(Halloween$Type == "Scary" | Halloween$Type == "scary" |Halloween$
 Halloween$Type[scary] <- "Scary"
 ```
 
-Now we want to calculate the mean age of trick-or-treaters and the mean number of pieces of candy they take.  This should be broken down by costume and type (scary vs not scary)
+Now we want to calculate the mean age of trick-or-treaters and the mean number of pieces of candy they take.  This should be broken down by costume and type (scary vs not scary).
 
 ```{r}
 # calculating the mean age of trick or treaters based on Costume and Type
@@ -92,9 +92,8 @@ geom_histogram(binwidth = 2) +
 xlab("Age of child") +
 ylab("Number")
 ```
-Now I am going to try and create a box plot outlining the age distribution of children wearing different costumes.  The goal is to make it so the boxplots are seperated by the costumes that are scary vs not scary as well.
+Now I am going to try and create a box plot outlining the age distribution of children wearing different costumes.  The goal is to make separate boxplots based on the type of costumes (scary vs not scary).
 
-Here we go...
 ```{r}
 # making a box and whisker plot with ggplot.  Here we are trying to model the relationship between the costume, age, and type of costume
 ggplot(Halloween, aes(x = Costume, y = age)) +
