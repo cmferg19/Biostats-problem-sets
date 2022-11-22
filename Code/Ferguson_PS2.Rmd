@@ -105,5 +105,5 @@ geom_boxplot()+
   xlab("Costume choice")
 #theme_bw()
 ```
-
+  VERY NICE JOB! I PARTICULARLY APPRECIATE HOW WELL YOU PRESENTED YOUR THINKING ABOUT THE CODE.
 
